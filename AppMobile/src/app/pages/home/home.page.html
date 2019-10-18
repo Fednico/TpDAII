@@ -6,7 +6,18 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content >
+<ion-content>
+    <div *ngIf='listadoDispositivos==null'>
+    
+        <ion-grid style="height: 100%">
+            <ion-row justify-content-center align-items-center style="height: 100%; flex-direction: column">
+                Conectando al servidor..
+                <ion-spinner name="circles"></ion-spinner>
+              </ion-row>
+            </ion-grid>
+    
+   </div>
+
   <ion-list >
     <ion-item-sliding *ngFor="let device of listadoDispositivos">
       <ion-item>

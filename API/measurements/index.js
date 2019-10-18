@@ -8,9 +8,10 @@ module.exports=routerMeasurements; //exporto router de operaciones
 
 //RETORNA LAS MEDICIONES DE LA TABLA ORDENADAS
 routerMeasurements.get('/',function(req,res){
-    connection.query('SELECT * FROM MEDICIONES ORDER BY MEDICIONID DESC',(err,result,field)=>{
+    connection.query('SELECT * FROM Mediciones ORDER BY MEDICIONID DESC',(err,result,field)=>{
         if(err){
             console.log("Error "+ err);
+            res.send(err);
             return;
         }
         res.send(result);
@@ -19,9 +20,10 @@ routerMeasurements.get('/',function(req,res){
 
 //RETORNA TODAS LAS MEDICIONES DE UN DISPOSITIVO ORDENADAS
 routerMeasurements.get('/all/:id',function(req,res){
-    connection.query('SELECT * FROM MEDICIONES WHERE DISPOSITIVOID=? ORDER BY MEDICIONID DESC',[req.params.id],(err,result,field)=>{
+    connection.query('SELECT * FROM Mediciones WHERE DISPOSITIVOID=? ORDER BY MEDICIONID DESC',[req.params.id],(err,result,field)=>{
         if(err){
             console.log("Error "+ err);
+            res.send(err);
             return;
         }
         res.send(result);
@@ -31,9 +33,10 @@ routerMeasurements.get('/all/:id',function(req,res){
 
 //RETORNA LA ULTIMA MEDICION DE UN DISPOSITIVO
 routerMeasurements.get('/last/:id',function(req,res){
-    connection.query('SELECT * FROM MEDICIONES WHERE DISPOSITIVOID=? ORDER BY MEDICIONID DESC',[req.params.id],(err,result,field)=>{
+    connection.query('SELECT * FROM Mediciones WHERE DISPOSITIVOID=? ORDER BY MEDICIONID DESC',[req.params.id],(err,result,field)=>{
         if(err){
             console.log("Error "+ err);
+            res.send(err);
             return;
         }
         res.send(result[0]);

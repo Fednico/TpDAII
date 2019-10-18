@@ -11,7 +11,6 @@ import { Router } from '@angular/router';
 export class HomePage {
 
   listadoDispositivos: Device[];
-  dispo: Device[];
 
   constructor( public deviceServ: DispositivosService, private _router:Router) {
     this.deviceServ.getDevices().then((listado)=>{
@@ -20,7 +19,7 @@ export class HomePage {
   }
 
 
-  detalleSensor(idDevice){
+  detalleSensor(idDevice: number){
     this._router.navigate(['detallesensor', idDevice]);
   }
 }

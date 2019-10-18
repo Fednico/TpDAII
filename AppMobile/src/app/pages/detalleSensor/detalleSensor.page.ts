@@ -6,6 +6,8 @@ import { MeasurementsService } from '../../services/measurements.service';
 import { Measurement } from '../../model/measurement';
 import { ToastController } from '@ionic/angular';
 import { Device } from '../../model/devices';
+import { InstanceCheck } from '@ionic-native/core';
+import { HttpResponse } from '@angular/common/http';
 
 declare var require: any;
 require('highcharts/highcharts-more')(Highcharts);
@@ -22,6 +24,7 @@ export class DetalleSensorPage {
 
   public idDispositivo: number;
   private valorObtenido: number;
+  public estadoElectrovalvula:boolean=false;
   public myChart;
   private chartOptions;
   public Dispositivo: Device;
@@ -31,21 +34,24 @@ export class DetalleSensorPage {
   constructor(private _router: Router, private route: ActivatedRoute,
               public deviceServ: DispositivosService, public measureServ: MeasurementsService, public toastController: ToastController) {
                 this.route.params.subscribe((params: Params) => {
-                  this.idDispositivo= params['idDevice'];
+                  this.idDispositivo= parseInt(params['idDevice']);
                 });
 
   }
+
+
   ionViewWillEnter(){
 
       this.generarChart();
-      this.measureServ.getLastMeasurementById(this.idDispositivo).then((ultimaMedicion) => {
-        this.Medicion = ultimaMedicion as Measurement;
+      this.measureServ.getLastMeasurementById(this.idDispositivo).then((ultimaMedicion:Measurement) => {
+        this.Medicion= ultimaMedicion;
+        console.log(this.Medicion);
+        this.actualizarChart(parseInt(this.Medicion.valor.toString()));
       });
   
     }
   ionViewDidEnter() {
-
-     this.actualizarChart(this.Medicion.valor);
+    console.log(this.estadoElectrovalvula);
      
   }
 
@@ -134,16 +140,25 @@ export class DetalleSensorPage {
               valueSuffix: ' kPA'
           }
       }]});
-    }, 2000);
+    }, 1000);
 
   }
 
   abrirElectrovalvula(){
     this.deviceServ.getDevice(this.idDispositivo).then((dispositivo) => {
       this.Dispositivo = dispositivo as Device;
-      this.ElectrovalvulaToast(this.Dispositivo.electrovalvulaId);
-    });
+      if(this.Medicion.valor>30){
+        this.estadoElectrovalvula=true;
+      setTimeout(() => {
+        this.estadoElectrovalvula=false;
+        this.Medicion.valor=10;
+        this.actualizarChart(this.Medicion.valor);     
+      }, 4000);
+       this.ElectrovalvulaToast(this.Dispositivo.electrovalvulaId);
+    }
+      });
   }
+  
 
   async ElectrovalvulaToast(idElectrovalvula: number) {
     const toast = await this.toastController.create({

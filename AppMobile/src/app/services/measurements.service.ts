@@ -13,10 +13,10 @@ export class MeasurementsService {
   constructor(private http: HttpClient) { }
 
   async getAllMeasurementsById(id: number) {
-    return await this.http.get('http://localhost:3500/measurements/all/' + id).toPromise();
+    return await this.http.get<Measurement[]>('http://localhost:3500/measurements/all/' + id).toPromise();
   }
 
   async getLastMeasurementById(id: number) {
-    return await this.http.get('http://localhost:3500/measurements/last/' + id).toPromise();
+    return await this.http.get<Measurement>('http://localhost:3500/measurements/last/' + id).toPromise();
   }
 }
