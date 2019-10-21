@@ -3,10 +3,8 @@ var connection =require('../mysql');
 
 var app = express();
 
-var routerDevices=express.Router(); //creo el manejador de la ruta
-
-
-module.exports=routerDevices; //exporto router de operaciones
+var routerDevices=express.Router(); 
+module.exports=routerDevices; 
 
 //RETORNA LA LISTA DE DISPOSITIVOS
 routerDevices.get('/',function(req,res){

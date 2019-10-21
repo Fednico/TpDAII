@@ -19,7 +19,6 @@ export class MedicionesPage implements OnInit {
       this.idDispositivo= params['idDevice'];
       this.measureServ.getAllMeasurementsById(this.idDispositivo).then((valores)=>{
         this.listadoMediciones= <Measurement[]> valores;
-        console.log(this.listadoMediciones);
       });
       });
   }

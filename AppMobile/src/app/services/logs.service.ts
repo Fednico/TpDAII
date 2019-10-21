@@ -8,7 +8,7 @@ import { Logs } from '../model/logs';
 export class LogsService {
 
 
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) { }
 
   async getAllLogById(id: number) {
     return await this.http.get<Logs[]>('http://localhost:3500/log/' + id).toPromise();

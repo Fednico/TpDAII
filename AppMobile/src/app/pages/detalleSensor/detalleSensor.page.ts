@@ -47,14 +47,11 @@ export class DetalleSensorPage {
       this.generarChart();
       this.measureServ.getLastMeasurementById(this.idDispositivo).then((ultimaMedicion:Measurement) => {
         this.Medicion= ultimaMedicion;
-        console.log(this.Medicion);
         this.actualizarChart(parseInt(this.Medicion.valor.toString()));
       });
   
     }
-  ionViewDidEnter() {
-    console.log(this.estadoElectrovalvula);
-     
+  ionViewDidEnter() {     
   }
 
   generarChart() {
@@ -175,7 +172,6 @@ export class DetalleSensorPage {
           this.measureServ.guardarMedicion(MedicionActualizada);
           this.ElectrovalvulaToast(this.Dispositivo.electrovalvulaId,'Cerrada');
           
-          console.log(fechaActualizacion);
           logRiegos.fecha = fechaActualizacion;
           logRiegos.apertura = 0;
           logRiegos.electrovalvulaId=this.idDispositivo;
@@ -201,6 +197,7 @@ export class DetalleSensorPage {
   private randomInt(min, max){
     return Math.floor(Math.random() * (max - min + 1)) + min;
  }
+ 
 }
 
 
