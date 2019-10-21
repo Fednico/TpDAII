@@ -8,6 +8,8 @@ import { ToastController } from '@ionic/angular';
 import { Device } from '../../model/devices';
 import { InstanceCheck } from '@ionic-native/core';
 import { HttpResponse } from '@angular/common/http';
+import { Logs } from 'src/app/model/logs';
+import { LogsService } from '../../services/logs.service';
 
 declare var require: any;
 require('highcharts/highcharts-more')(Highcharts);
@@ -30,9 +32,9 @@ export class DetalleSensorPage {
   public Dispositivo: Device;
   public Medicion: Measurement;
 
-  // tslint:disable-next-line: variable-name
   constructor(private _router: Router, private route: ActivatedRoute,
-              public deviceServ: DispositivosService, public measureServ: MeasurementsService, public toastController: ToastController) {
+              public deviceServ: DispositivosService, public measureServ: MeasurementsService, public logServ: LogsService,
+              public toastController: ToastController) {
                 this.route.params.subscribe((params: Params) => {
                   this.idDispositivo= parseInt(params['idDevice']);
                 });
@@ -131,12 +133,11 @@ export class DetalleSensorPage {
   }
 
   LogRiegos(){
-    this._router.navigate(['log',this.idDispositivo]);
+    this._router.navigate(['log-riegos',this.idDispositivo]);
   }
 
   actualizarChart(valor: number){
     setTimeout(() => {
-     // console.log("valor a actualizar: "+valor);
       this.myChart.update({series: [{
           name: 'kPA',
           data: [valor],
@@ -151,24 +152,34 @@ export class DetalleSensorPage {
   abrirElectrovalvula(){
     this.deviceServ.getDevice(this.idDispositivo).then((dispositivo) => {
       this.Dispositivo = dispositivo as Device;
-      if(this.Medicion.valor>30){
-        this.estadoElectrovalvula=true;
-      setTimeout(() => {
-        this.estadoElectrovalvula=false;
-        this.Medicion.valor=this.randomInt(5,20);
-        this.actualizarChart(this.Medicion.valor);
-        let MedicionActualizada:Measurement;
-        MedicionActualizada = new Measurement();
-        
-        MedicionActualizada.dispositivoId=parseInt(this.idDispositivo.toString());
-        MedicionActualizada.valor=this.Medicion.valor;
-        let fechaActualizacion:Date=new Date();
-        console.log(fechaActualizacion);
-        
-        MedicionActualizada.fecha=fechaActualizacion;
-        this.measureServ.guardarMedicion(this.Medicion);
-        this.ElectrovalvulaToast(this.Dispositivo.electrovalvulaId,"Cerrada");
-     
+      let fechaActualizacion: Date = new Date();
+      let logRiegos: Logs= new Logs();
+      logRiegos.fecha = fechaActualizacion;
+      logRiegos.apertura = 1;
+      logRiegos.electrovalvulaId=this.idDispositivo;
+      this.logServ.guardarLog(logRiegos);
+    
+      if(this.Medicion.valor > 30) {
+        this.estadoElectrovalvula = true;
+       
+        setTimeout(() => {
+          this.estadoElectrovalvula = false;
+          this.Medicion.valor = this.randomInt(5,20);
+          this.actualizarChart(this.Medicion.valor);
+          let MedicionActualizada: Measurement;
+          MedicionActualizada = new Measurement();
+          MedicionActualizada.dispositivoId = parseInt(this.idDispositivo.toString());
+          MedicionActualizada.valor = this.Medicion.valor;
+          
+          MedicionActualizada.fecha = fechaActualizacion;
+          this.measureServ.guardarMedicion(MedicionActualizada);
+          this.ElectrovalvulaToast(this.Dispositivo.electrovalvulaId,'Cerrada');
+          
+          console.log(fechaActualizacion);
+          logRiegos.fecha = fechaActualizacion;
+          logRiegos.apertura = 0;
+          logRiegos.electrovalvulaId=this.idDispositivo;
+          this.logServ.guardarLog(logRiegos);
       }, 4000);
        this.ElectrovalvulaToast(this.Dispositivo.electrovalvulaId,"Abierta");
     }

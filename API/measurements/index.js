@@ -20,7 +20,7 @@ routerMeasurements.get('/',function(req,res){
 });
 //espero recibir un json {medicion:{fecha:date,valor:int,dispositivoId:int}}
 routerMeasurements.post('/insert',function(req,res){
-    connection.query('INSERT INTO Mediciones (fecha,valor,dispositivoId) VALUES (?,?,?)',[new Date(req.body.medicion.fecha).getUTCDate,
+    connection.query('INSERT INTO Mediciones (fecha,valor,dispositivoId) VALUES (?,?,?)',[new Date (req.body.medicion.fecha),
     req.body.medicion.valor,req.body.medicion.dispositivoId],(err,result,field)=>{
         if(err){
             console.log("Error "+ err);

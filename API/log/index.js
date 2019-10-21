@@ -7,7 +7,7 @@ routerLog.use(express.json());
 
 
 routerLog.post('/insert',function(req,res){
-    connection.query('INSERT INTO Log_Riegos (apertura,fecha,electrovalvulaId) VALUES (?,?,?)',[req.body.log.apertura,new Date(req.body.log.fecha).getUTCDate,
+    connection.query('INSERT INTO Log_Riegos (apertura,fecha,electrovalvulaId) VALUES (?,?,?)',[req.body.log.apertura,new Date(req.body.log.fecha),
         req.body.log.electrovalvulaId],(err,result,field)=>{
         if(err){
             console.log("Error "+ err);
