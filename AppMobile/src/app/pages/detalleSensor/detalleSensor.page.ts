@@ -130,6 +130,10 @@ export class DetalleSensorPage {
     this._router.navigate(['mediciones',this.idDispositivo]);
   }
 
+  LogRiegos(){
+    this._router.navigate(['log',this.idDispositivo]);
+  }
+
   actualizarChart(valor: number){
     setTimeout(() => {
      // console.log("valor a actualizar: "+valor);
@@ -151,25 +155,41 @@ export class DetalleSensorPage {
         this.estadoElectrovalvula=true;
       setTimeout(() => {
         this.estadoElectrovalvula=false;
-        this.Medicion.valor=10;
-        this.actualizarChart(this.Medicion.valor);     
+        this.Medicion.valor=this.randomInt(5,20);
+        this.actualizarChart(this.Medicion.valor);
+        let MedicionActualizada:Measurement;
+        MedicionActualizada = new Measurement();
+        
+        MedicionActualizada.dispositivoId=parseInt(this.idDispositivo.toString());
+        MedicionActualizada.valor=this.Medicion.valor;
+        let fechaActualizacion:Date=new Date();
+        console.log(fechaActualizacion);
+        
+        MedicionActualizada.fecha=fechaActualizacion;
+        this.measureServ.guardarMedicion(this.Medicion);
+        this.ElectrovalvulaToast(this.Dispositivo.electrovalvulaId,"Cerrada");
+     
       }, 4000);
-       this.ElectrovalvulaToast(this.Dispositivo.electrovalvulaId);
+       this.ElectrovalvulaToast(this.Dispositivo.electrovalvulaId,"Abierta");
     }
       });
   }
   
 
-  async ElectrovalvulaToast(idElectrovalvula: number) {
+  async ElectrovalvulaToast(idElectrovalvula: number, mensaje:string) {
     const toast = await this.toastController.create({
       header: 'Electrovalvula ' + idElectrovalvula,
       position: 'top',
       color: 'light',
-      message: 'Abierta',
+      message: mensaje,
       duration: 2000
     });
     toast.present();
   }
+
+  private randomInt(min, max){
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+ }
 }
 
 

@@ -13,8 +13,8 @@ routerDevices.get('/',function(req,res){
     connection.query('SELECT * FROM Dispositivos',function(err,result,fields){
         if(err){
             console.log("Error "+ err);
-            res.send(err);
-            return;
+            res.status(400).send(err);
+             return;
         }
         res.send(result);
     });    
@@ -25,7 +25,7 @@ routerDevices.get('/:id',function(req,res,){
     connection.query('SELECT * FROM Dispositivos WHERE dispositivoId=?',[req.params.id],function(err,result,fields){
         if(err){
             console.log("Error "+ err);
-            res.send(err);
+            res.status(400).send(err);
             return;
         }
         res.send(result[0]);

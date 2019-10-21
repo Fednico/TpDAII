@@ -19,4 +19,9 @@ export class MeasurementsService {
   async getLastMeasurementById(id: number) {
     return await this.http.get<Measurement>('http://localhost:3500/measurements/last/' + id).toPromise();
   }
+
+//espero recibir un json {medicion:{fecha:date,valor:int,dispositivoId:int
+  async guardarMedicion(Medicion: Measurement){
+    return await this.http.post('http://localhost:3500/measurements/insert', {medicion: Medicion}).toPromise();
+  }
 }
